@@ -16,7 +16,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class RoomController {
 
-    private RoomRepository roomRepository;
+    private final RoomRepository roomRepository;
 
     @PostMapping
     public ResponseEntity<?> createRoom(@RequestBody String roomId) {
@@ -50,7 +50,10 @@ public class RoomController {
         }
 
         List<Message> messages = room.getMessages();
+        int start = Math.max(0, messages.size() - (page + 1) * size);
+        int end = Math.min(messages.size(),start+size);
 
+        List<Message> paginatedMessages = messages.subList(start,end);
         return ResponseEntity.ok(messages);
     }
 }
